@@ -31,7 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //          Não cheque essas requisições
             .authorizeRequests()
                  .antMatchers("/pessoa/authorization","/auth","/usuario","/pessoa/authenticate","/configuration/**","/webbjars/**").permitAll()
-                .antMatchers(HttpMethod.OPTIONS,"/pessoa/resumo").permitAll()
+                .antMatchers(HttpMethod.OPTIONS,"/pessoa/resumo","/usuario/{id}","/usuario/","/pessoa/","/pessoa/{id}").permitAll()
 //                Qualquer Outra requisição deve ser checada
             .anyRequest().authenticated().and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS);

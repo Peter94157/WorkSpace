@@ -6,4 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PessoaRepository extends JpaRepository<PessoaEntity, Long> {
+
+    PessoaEntity findById(int id);
+
+    void deleteById(int id);
 }

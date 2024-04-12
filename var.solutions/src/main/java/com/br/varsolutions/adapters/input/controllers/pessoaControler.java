@@ -2,14 +2,15 @@ package com.br.varsolutions.adapters.input.controllers;
 import com.br.varsolutions.adapters.input.Entities.PessaoResponse;
 import com.br.varsolutions.adapters.input.Entities.Pessoa;
 import com.br.varsolutions.application.services.Entities.InfoIMC;
-import com.br.varsolutions.application.services.Entities.InfoRenda;
 import com.br.varsolutions.application.services.useCase.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -31,16 +32,34 @@ public class pessoaControler {
     private ImcUseCase imcUseCase;
     //EndPoint
     @GetMapping
-    public ResponseEntity<Object> get() {
-        Pessoa pessoaRequest = Pessoa.builder()
-                .nome("Pedro")
-                .sobrenome("Leonardo")
-                .endereco("Estrada do pequia,286")
-                .idade(23)
-                .build();
+    public ResponseEntity<List<PessaoResponse>> get() throws SQLException {
 
-        return ResponseEntity.ok(pessoaRequest);
+        List<PessaoResponse> listaDePessoas = montarResponseFrontUserCase.buscaListaPessoas();
+        if(Objects.isNull(listaDePessoas)){
+            return (ResponseEntity<List<PessaoResponse>>) ResponseEntity.notFound();
+        }
+
+        return ResponseEntity.ok(listaDePessoas);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PessaoResponse> getPessoa(@PathVariable Long id) throws SQLException {
+        int idd = (int) (long) id;
+        PessaoResponse detalhesPessoa = montarResponseFrontUserCase.buscaDetalhesPessoa(idd);
+
+        if(Objects.isNull(detalhesPessoa)){
+            return (ResponseEntity<PessaoResponse>) ResponseEntity.notFound();
+        }
+        return ResponseEntity.ok(detalhesPessoa);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<PessaoResponse> deletePessoa(@PathVariable Long id) throws SQLException {
+        int idd = (int) (long) id;
+        montarResponseFrontUserCase.excluirPessoa(idd);
+        return ResponseEntity.status(HttpStatus.OK).body(PessaoResponse.builder().build());
+    }
+
     @PostMapping("/resumo")
     public ResponseEntity<Object> getPessoa(@RequestBody Pessoa pessoinha, @RequestParam(value = "Valida_Mundial") Boolean desejaValidarMundial) throws SQLException {
         InfoIMC imc = InfoIMC.builder().build();
@@ -83,13 +102,13 @@ public class pessoaControler {
         }
         return ResponseEntity.noContent().build();
     }
-    @DeleteMapping
-    public void retornoDelete() {
-    }
-    @PutMapping
-    public void retornoPut() {
-    }
-    @PostMapping
-    public void retornoPost() {
-    }
+//    @DeleteMapping
+//    public void retornoDelete() {
+//    }
+//    @PutMapping
+//    public void retornoPut() {
+//    }
+//    @PostMapping
+//    public void retornoPost() {
+//    }
 }

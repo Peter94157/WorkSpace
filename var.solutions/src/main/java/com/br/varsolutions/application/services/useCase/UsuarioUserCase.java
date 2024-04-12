@@ -9,4 +9,6 @@ public interface UsuarioUserCase {
 
     Usuario bucasUsuario (Usuario user);
 
+    Usuario AtualizarUsuario(Usuario user, Long id);
+
 }

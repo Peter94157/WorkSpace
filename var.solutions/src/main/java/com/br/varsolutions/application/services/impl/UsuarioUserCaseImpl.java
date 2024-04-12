@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class UsuarioUserCaseImpl implements UsuarioUserCase {
@@ -53,7 +54,25 @@ public class UsuarioUserCaseImpl implements UsuarioUserCase {
                 .usuario(novoUsuario.getUsuario())
                 .senha(novoUsuario.getSenha())
                 .build();
+    }
+    public Usuario AtualizarUsuario(Usuario user, Long id){
+        return atualizaUser(user, id);
+    }
 
+    private Usuario atualizaUser(Usuario user, Long id) {
+        Integer intId = (int) (long) id;
+        Optional<UsuarioEntity> UsuarioExistente = Optional.ofNullable(usuarioRepository.findById(intId));
 
+        if(UsuarioExistente.isPresent()){
+            UsuarioEntity retornoExistente = UsuarioExistente.get();
+            retornoExistente.setSenha(user.getSenha());
+            UsuarioEntity UsuarioAtualizado = usuarioRepository.save(retornoExistente);
+
+            return Usuario.builder()
+                    .nome(UsuarioAtualizado.getNome())
+                    .usuario(UsuarioAtualizado.getUsuario())
+                    .build();
+        }
+        return null;
     }
 }

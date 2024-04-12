@@ -3,7 +3,6 @@ package com.br.varsolutions.application.services.impl;
 import com.br.varsolutions.adapters.input.Entities.PessaoResponse;
 import com.br.varsolutions.adapters.input.Entities.Pessoa;
 import com.br.varsolutions.application.services.Entities.InfoIMC;
-import com.br.varsolutions.application.services.Entities.InfoRenda;
 import com.br.varsolutions.application.services.useCase.MontarResponseFrontUserCase;
 import com.br.varsolutions.domain.entities.PessoaEntity;
 import com.br.varsolutions.domain.entities.UsuarioEntity;
@@ -11,13 +10,16 @@ import com.br.varsolutions.domain.repositories.PessoaRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
+@Transactional
 public class MontarResponseFrontUserCaseImpl implements MontarResponseFrontUserCase {
     @Autowired
     PessoaRepository repository ;
@@ -27,8 +29,6 @@ public class MontarResponseFrontUserCaseImpl implements MontarResponseFrontUserC
     }
 
     private PessaoResponse montarRespostaFront(Pessoa pessoa, InfoIMC imc, int anoNasc, double impostoRenda, String time, double saldoEmDolar) throws SQLException {
-
-
 
         try {
 
@@ -76,7 +76,83 @@ public class MontarResponseFrontUserCaseImpl implements MontarResponseFrontUserC
             throw new SQLException("Erro ao salvar no Banco de Dados", e);
         }
 
+    }
+    public List<PessaoResponse> buscaListaPessoas() throws SQLException {
+        return listPessoas();
+    }
+    private List<PessaoResponse> listPessoas() throws SQLException {
 
+        try{
+            List<PessoaEntity> pessoasEntity = repository.findAll();
+            List<PessaoResponse> pessoasResponse = new ArrayList<>();
+
+            pessoasEntity.stream().forEach(Entity -> {
+                PessaoResponse pessoaResponse = PessaoResponse.builder().build();
+
+                pessoaResponse.setUserId(Entity.getId());
+                pessoaResponse.setNome(Entity.getNome());
+                pessoaResponse.setDtNascimento(Entity.getDtNascimento());
+                pessoaResponse.setAltura(Entity.getAltura());
+                pessoaResponse.setPeso(Entity.getPeso());
+                pessoaResponse.setSalario(Entity.getSalario());
+                pessoaResponse.setSaldo(Entity.getSaldo());
+                pessoaResponse.setIdade(Entity.getIdade());
+                pessoaResponse.setImc(Entity.getImc());
+                pessoaResponse.setClassificacaoIMC(Entity.getClassificacao());
+                pessoaResponse.setIR(Entity.getInss());//Não colocou
+                pessoaResponse.setAliquota(Entity.getAliquota());
+//                pessoaResponse.setSalario(Entity.getSalarioLiquido());
+                pessoaResponse.setSaldoEmDolar(Entity.getSaldoDolar());
+
+
+
+                pessoasResponse.add(pessoaResponse);
+            });
+            return pessoasResponse;
+
+        }
+        catch(Exception e){
+            throw new SQLException("Erro ao buscar no banco de dados", e);
+        }
+
+    }
+
+    public PessaoResponse buscaDetalhesPessoa(int id) throws SQLException {
+
+        return buscaDetalhesDaPessoa(id);
+    }
+
+    private PessaoResponse buscaDetalhesDaPessoa(int id) throws SQLException {
+
+            PessoaEntity pessoasEntity = repository.findById(id);
+        try{
+            return PessaoResponse.builder()
+                    .UserId(pessoasEntity.getId())
+                    .nome(pessoasEntity.getNome())
+                    .dtNascimento(pessoasEntity.getDtNascimento())
+                    .altura(pessoasEntity.getAltura())
+                    .peso(pessoasEntity.getPeso())
+                    .salario(pessoasEntity.getSalario())
+                    .saldo(pessoasEntity.getSaldo())
+                    .idade(pessoasEntity.getIdade())
+                    .imc(pessoasEntity.getImc())
+                    .classificacaoIMC(pessoasEntity.getClassificacao())
+                    .IR(pessoasEntity.getInss())
+                    .aliquota(pessoasEntity.getAliquota())
+                    .saldoEmDolar(pessoasEntity.getSaldoDolar())
+        .build();
+        }catch(Exception e){
+            throw new SQLException("Não foi possivel encontrar os detalhes no Banco de dados",e);
+        }
+    }
+    public void excluirPessoa(int id) throws SQLException {
+
+        try{
+            repository.deleteById(id);
+        }
+        catch (Exception e){
+            throw new SQLException("Não foi possivel Excluir esse id",e);
+        }
 
 
     }

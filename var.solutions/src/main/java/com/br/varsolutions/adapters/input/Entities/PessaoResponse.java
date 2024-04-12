@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @Builder
@@ -27,6 +29,8 @@ public class PessaoResponse {
     public double peso;
 
     public double saldo;
+    public int UserId;
+    public LocalDate dtNascimento;
 
 
 }

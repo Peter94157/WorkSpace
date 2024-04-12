@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+
 @RestController
 @RequestMapping("/usuario")
 @CrossOrigin(origins = "*")
@@ -16,6 +18,7 @@ public class UsuarioController {
 
     @Autowired
     UsuarioUserCase usuarioUserCase;
+
     @PostMapping
     public ResponseEntity<Usuario> post(@RequestBody Usuario user){
 
@@ -25,4 +28,17 @@ public class UsuarioController {
     return ResponseEntity.status(HttpStatus.CREATED).body(novoUsuarioCadastrado);
 
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Usuario> put (@RequestBody Usuario user, @PathVariable Long id){
+        log.info("Inciando a atualização de um usuario existente. "+id);
+        Usuario userAtualizado = usuarioUserCase.AtualizarUsuario(user, id);
+
+        if (Objects.isNull(userAtualizado)){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(userAtualizado);
+        }
+          return ResponseEntity.status(HttpStatus.OK).body(userAtualizado);
+        }
+
+
 }
