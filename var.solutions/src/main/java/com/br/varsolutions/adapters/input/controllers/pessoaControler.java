@@ -70,7 +70,7 @@ public class pessoaControler {
 
         if (!pessoinha.getNome().isEmpty()) {
 
-            log.info("Iniciando o prccessp de resumo da pessoa ", pessoinha);
+            log.info("Iniciando o prccesso de resumo da pessoa ", pessoinha);
 
             if (Objects.nonNull(pessoinha.getAltura()) && Objects.nonNull(pessoinha.getPeso())) {
                 log.info("Iniciando calcullo IMC");
@@ -102,6 +102,8 @@ public class pessoaControler {
         }
         return ResponseEntity.noContent().build();
     }
+
+
 //    @DeleteMapping
 //    public void retornoDelete() {
 //    }

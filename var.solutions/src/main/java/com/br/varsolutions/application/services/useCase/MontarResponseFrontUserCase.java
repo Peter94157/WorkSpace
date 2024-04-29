@@ -3,7 +3,6 @@ package com.br.varsolutions.application.services.useCase;
 import com.br.varsolutions.adapters.input.Entities.PessaoResponse;
 import com.br.varsolutions.adapters.input.Entities.Pessoa;
 import com.br.varsolutions.application.services.Entities.InfoIMC;
-import com.br.varsolutions.application.services.Entities.InfoRenda;
 
 import java.sql.SQLException;
 import java.util.List;

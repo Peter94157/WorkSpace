@@ -2,12 +2,12 @@ package com.br.varsolutions.adapters.input.controllers;
 
 import com.br.varsolutions.adapters.input.Entities.Usuario;
 import com.br.varsolutions.application.services.useCase.UsuarioUserCase;
+import com.br.varsolutions.infraestructure.config.RabbitMQ.ProdutorMensagem;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Objects;
 
 @RestController
@@ -18,6 +18,13 @@ public class UsuarioController {
 
     @Autowired
     UsuarioUserCase usuarioUserCase;
+
+
+    private ProdutorMensagem produtorMensagem;
+    public UsuarioController(ProdutorMensagem produtorMensagem) {
+        this.produtorMensagem = produtorMensagem;
+    }
+
 
     @PostMapping
     public ResponseEntity<Usuario> post(@RequestBody Usuario user){
@@ -40,5 +47,13 @@ public class UsuarioController {
           return ResponseEntity.status(HttpStatus.OK).body(userAtualizado);
         }
 
+
+    @PostMapping("/esquecisenha")
+    public String recuperarSenha(@RequestBody String email){
+        //TODO:  CHAMAR O SERVIÇO QUE PUBLICA NA FILA
+        produtorMensagem.enviarEmail(email);
+        return "Email de recuperação enviado com sucesso para "+email;
+
+    }
 
 }

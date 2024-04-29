@@ -5,17 +5,18 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PublicarMensagem {
+public class ProdutorMensagem {
 
     private final RabbitTemplate rabbitTemplate;
     private final Queue queue;
-    public PublicarMensagem(RabbitTemplate rabbitTemplate, Queue queue) {
+    public ProdutorMensagem(RabbitTemplate rabbitTemplate, Queue queue) {
         this.rabbitTemplate = rabbitTemplate;
         this.queue = queue;
     }
 
-    public void publicarMensagem(String mensagem){
-        rabbitTemplate.con
+    public void enviarEmail(String mensagem){
+        rabbitTemplate.convertAndSend(queue.getName(),mensagem);
+        System.out.println("Mensagem enviada com sucesso "+mensagem);
 
     }
 
