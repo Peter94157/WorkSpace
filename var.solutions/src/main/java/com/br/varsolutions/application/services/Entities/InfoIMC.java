@@ -1,12 +1,12 @@
 package com.br.varsolutions.application.services.Entities;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class InfoIMC {
     private double imc;
     private String classificacao;}

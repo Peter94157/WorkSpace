@@ -49,10 +49,10 @@ public class UsuarioController {
 
 
     @PostMapping("/esquecisenha")
-    public String recuperarSenha(@RequestBody String email){
-        //TODO:  CHAMAR O SERVIÇO QUE PUBLICA NA FILA
+    public ResponseEntity recuperarSenha(@RequestBody String email){
+
         produtorMensagem.enviarEmail(email);
-        return "Email de recuperação enviado com sucesso para "+email;
+        return ResponseEntity.ok(email);
 
     }
 

@@ -1,8 +1,8 @@
 package com.br.varsolutions.infraestructure.config.RabbitMQ;
 
 
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -17,12 +17,23 @@ public class RabbitMQConfig {
     public static final int PORTA =5672;
     public static final String USUARIO ="guest";
     public static final String SENHA ="guest";
-
+    public static final String NOME_EXCHANGE = "enviarEmail";
+    public static final String ROUTING_KEY = "chaveEmail";
 
 
     @Bean
     public Queue queue(){
         return new Queue(NOME_FILA,false);
+    }
+
+    @Bean
+    public DirectExchange exchange(){
+        return new DirectExchange(NOME_EXCHANGE);
+    }
+
+    @Bean
+    public Binding binding(Queue queue, DirectExchange exchange){
+        return BindingBuilder.bind(queue).to(exchange).with(ROUTING_KEY);
     }
 
     @Bean

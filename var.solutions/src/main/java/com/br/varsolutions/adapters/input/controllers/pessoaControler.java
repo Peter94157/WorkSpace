@@ -3,6 +3,7 @@ import com.br.varsolutions.adapters.input.Entities.PessaoResponse;
 import com.br.varsolutions.adapters.input.Entities.Pessoa;
 import com.br.varsolutions.application.services.Entities.InfoIMC;
 import com.br.varsolutions.application.services.useCase.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -61,7 +62,7 @@ public class pessoaControler {
     }
 
     @PostMapping("/resumo")
-    public ResponseEntity<Object> getPessoa(@RequestBody Pessoa pessoinha, @RequestParam(value = "Valida_Mundial") Boolean desejaValidarMundial) throws SQLException {
+    public ResponseEntity<Object> getPessoa(@RequestBody Pessoa pessoinha) throws SQLException, JsonProcessingException {
         InfoIMC imc = InfoIMC.builder().build();
         int anoNasc = 0;
         double impostoRenda =0;
@@ -85,12 +86,12 @@ public class pessoaControler {
                 log.info("Iniciando calcula salario");
                 impostoRenda = calculoIRUserCase.calculoIR(pessoinha.getSalario());
             }
-            if (Boolean.TRUE.equals(desejaValidarMundial)) {
-                if (Objects.nonNull(pessoinha.getTime())) {
-                    log.info("Iniciando vendo qual o time");
-                    time = mundialUseCase.calculoMundial(pessoinha.getTime());
-                }
-            }
+//            if (Boolean.TRUE.equals(desejaValidarMundial)) {
+//                if (Objects.nonNull(pessoinha.getTime())) {
+//                    log.info("Iniciando vendo qual o time");
+//                    time = mundialUseCase.calculoMundial(pessoinha.getTime());
+//                }
+//            }
             if (Objects.nonNull(pessoinha.getSaldo())) {
                 log.info("Inciando o calculo da conversão");
                 saldoEmDolar = converterDolarUserCase.converterDolar(pessoinha.getSaldo());
@@ -102,15 +103,4 @@ public class pessoaControler {
         }
         return ResponseEntity.noContent().build();
     }
-
-
-//    @DeleteMapping
-//    public void retornoDelete() {
-//    }
-//    @PutMapping
-//    public void retornoPut() {
-//    }
-//    @PostMapping
-//    public void retornoPost() {
-//    }
 }

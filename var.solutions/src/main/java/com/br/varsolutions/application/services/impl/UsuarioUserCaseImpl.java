@@ -28,6 +28,7 @@ public class UsuarioUserCaseImpl implements UsuarioUserCase {
         if (Objects.nonNull(novoUsuario) && novoUsuario.getSenha().equals(user.getSenha())) {
             return Usuario.builder().id(novoUsuario.getId())
                     .nome(novoUsuario.getNome())
+                    .usuario(novoUsuario.getUsuario())
                     .senha(novoUsuario.getSenha())
                     .build();
         }

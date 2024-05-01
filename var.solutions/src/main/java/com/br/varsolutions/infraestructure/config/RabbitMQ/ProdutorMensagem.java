@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 public class ProdutorMensagem {
 
     private final RabbitTemplate rabbitTemplate;
+    public static final String NOME_EXCHANGE = "enviarEmail";
+    public static final String ROUTING_KEY = "chaveEmail";
     private final Queue queue;
     public ProdutorMensagem(RabbitTemplate rabbitTemplate, Queue queue) {
         this.rabbitTemplate = rabbitTemplate;
@@ -15,7 +17,8 @@ public class ProdutorMensagem {
     }
 
     public void enviarEmail(String mensagem){
-        rabbitTemplate.convertAndSend(queue.getName(),mensagem);
+        rabbitTemplate.convertAndSend(ROUTING_KEY,mensagem);
+        rabbitTemplate.setExchange(NOME_EXCHANGE);
         System.out.println("Mensagem enviada com sucesso "+mensagem);
 
     }

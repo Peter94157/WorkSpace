@@ -17,7 +17,7 @@ public class JwtTokenUtil implements Serializable {
     private static final long serialVersionUID = -2550185165626007488L;
 
 
-    public static final long JWT_TOKEN_EXPIRES = 1800000;
+        public static final long JWT_TOKEN_EXPIRES = 120000;
     private String secret = "7c1fdd0350056ef0d2052364aa7d826c035bed93c2461a250339c05ba99f69aaf9302ab7dd1bc358eca2b8f57cdc201b117109d7a3b57fda0bb49fb7851eea34";
 
     //retorna o username do token do  jwt
